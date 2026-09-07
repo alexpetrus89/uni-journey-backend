@@ -1,0 +1,66 @@
+package com.alex.unijourneybackend.modules.examination_appeal.web.dto;
+
+import java.time.LocalDate;
+import java.util.Set;
+
+import com.alex.unijourneybackend.common.validation.annotation.ValidProfessorCode;
+import com.alex.unijourneybackend.modules.student.web.dto.request.StudentRequest;
+
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public class ExaminationAppealDto {
+
+    // instance variables
+    private Long id;
+
+    @NotNull(message = "Course cannot be null")
+    private String course;
+
+    @NotBlank(message = "Degree course cannot be blank")
+    private String degreeCourse;
+
+    @NotBlank(message = "Course CFU cannot be blank")
+    private String courseCfu;
+
+    @NotBlank(message = "Professor code cannot be blank")
+    @ValidProfessorCode
+    private String professorCode;
+
+    private String professorFullName;
+
+    @NotBlank(message = "Description cannot be blank")
+    private String description;
+
+    @NotNull(message = "Date cannot be null")
+    @FutureOrPresent(message = "Date must be in the present or future")
+    private LocalDate date;
+
+    private Set<StudentRequest> students;
+
+    // Getters
+    public Long getId() { return id; }
+    public String getCourse() { return course; }
+    public String getDegreeCourse() { return degreeCourse; }
+    public String getCourseCfu() { return courseCfu; }
+    public String getProfessorCode() { return professorCode; }
+    public String getProfessorFullName() { return professorFullName; }
+    public String getDescription() { return description; }
+    public LocalDate getDate() { return date; }
+    public Set<StudentRequest> getStudents() { return students; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setCourse(String course) { this.course = course; }
+    public void setDegreeCourse(String degreeCourse) { this.degreeCourse = degreeCourse; }
+    public void setCourseCfu(String courseCfu) { this.courseCfu = courseCfu; }
+    public void setProfessorCode(String professorCode) { this.professorCode = professorCode; }
+    public void setProfessorFullName(String professorFullName) { this.professorFullName = professorFullName; }
+    public void setDescription(String description) { this.description = description; }
+    public void setDate(LocalDate date) { this.date = date; }
+    public void setStudents(Set<StudentRequest> students) { this.students = students; }
+
+
+}
+

@@ -1,0 +1,14 @@
+{
+    "topics": {
+        "EXAM_SCHEDULED": "/topic/exam-scheduled",
+        "EXAM_OUTCOME": "/topic/exam-outcome",
+        "EXAM_APPEAL_SCHEDULED": "/topic/exam-appeal-scheduled",
+        "FACULTY_NEWS": "/topic/faculty-news",
+        "PASSWORD_RESET": "/topic/password-reset",
+        "PASSWORD_CHANGED": "/topic/password-changed",
+        "USER_REGISTERED": "/topic/user-registered",
+        "USER_DELETED": "/topic/user-deleted",
+        "ACCOUNT_LOCKED": "/topic/account-locked",
+        "STUDY_PLAN_UPDATED": "/topic/study-plan-updated"
+    }
+}

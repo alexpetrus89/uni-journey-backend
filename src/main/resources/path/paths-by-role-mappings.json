@@ -1,0 +1,59 @@
+{
+    "publicUrls": [
+        "/error",
+        "/api/v1/ws/**",
+        "/api/v1/csrf",
+        "/api/v1/auth/me",
+        "/api/v1/auth/login",
+        "/api/v1/auth/logout",
+        "/api/v1/auth/profile",
+        "/api/v1/registration",
+        "/api/v1/password/forgot",
+        "/api/v1/password/reset",
+        "/api/v1/degree-course/catalog",
+        "/api/v1/course/read/public/**",
+
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/v3/api-docs/**",
+        "/v3/api-docs"
+    ],
+    "adminUrls": [
+        "/user_admin/**",
+        "/api/v1/user/read/all",
+        "/api/v1/user/manage",
+        "/api/v1/user/delete",
+        "/api/v1/system/**",
+        "/api/v1/student/**",
+        "/api/v1/professor/read/**",
+        "/api/v1/course/read/course",
+        "/api/v1/course/read/courses",
+        "/api/v1/course/create",
+        "/api/v1/course/update",
+        "/api/v1/course/delete/{degreeCourseName}/{courseName}",
+        "/api/v1/degree-course/read/degree-courses",
+        "/api/v1/degree-course/read/professors",
+        "/api/v1/degree-course/read/students",
+        "/api/v1/examination/read/examinations",
+        "/api/v1/examination/update/update",
+        "/api/v1/examination/delete/delete",
+        "/api/v1/examination/read/course/degree-course",
+        "/api/v1/examination/read/professor/unique-code"
+    ],
+    "studentUrls": [
+        "/user_student/**",
+        "/api/v1/study-plan/**"
+    ],
+    "professorUrls": [
+        "/user_professor/**",
+        "/api/v1/user/create/professor",
+        "/api/v1/course/read/professor",
+        "/api/v1/examination-appeal/read/professor",
+        "/api/v1/examination-appeal/make",
+        "/api/v1/examination-appeal/create",
+        "/api/v1/examination-appeal/delete",
+        "/api/v1/examination-appeal/delete/confirm",
+        "/api/v1/examination-outcome/make/{register}/{id}",
+        "/api/v1/examination-outcome/notify"
+    ]
+}

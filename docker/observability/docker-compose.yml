@@ -1,0 +1,69 @@
+# docker/observability/docker-compose.yml
+services:
+  loki:
+    image: grafana/loki:3.1.0
+    container_name: unijourney-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:3.1.0
+    container_name: unijourney-promtail
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../../logs:/backend-logs:ro   # log locali del backend Spring Boot finché non è in Docker
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: unijourney-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: unijourney-cadvisor
+    ports:
+      - "8085:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: unijourney-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./grafana-dashboards-provider.yml:/etc/grafana/provisioning/dashboards/provider.yaml:ro
+      - ./dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - loki
+      - prometheus
+
+volumes:
+  loki_data:
+  prometheus_data:
+  grafana_data:

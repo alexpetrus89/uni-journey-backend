@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <!-- =============================== -->
+    <!-- Directory dei log -->
+    <!-- =============================== -->
+    <property name="LOG_DIR" value="./logs"/>
+
+    <!-- Pattern comune per log -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+
+
+    <!-- =============================== -->
+    <!-- Appender generici (RollingFile) -->
+    <!-- =============================== -->
+
+    <!-- Console Appender: stampa tutto in console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root / generico -->
+    <appender name="ROOT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Sicurezza -->
+    <appender name="SECURITY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/security.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/security-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Database / Hibernate -->
+    <appender name="DB_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/database.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/database-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Web / Controllers -->
+    <appender name="WEB_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/web.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/web-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Service -->
+    <appender name="SERVICE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/service-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Repository -->
+    <appender name="REPO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/repository.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/repository-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- =============================== -->
+    <!-- Loki Appender -->
+    <!-- =============================== -->
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>http://localhost:3100/loki/api/v1/push</url>
+        </http>
+        <format>
+            <label>
+                <pattern>app=unijourney-backend,host=${HOSTNAME},level=%level</pattern>
+            </label>
+            <message>
+                <pattern>${LOG_PATTERN}</pattern>
+            </message>
+        </format>
+    </appender>
+
+    <!-- =============================== -->
+    <!-- Logger per area -->
+    <!-- =============================== -->
+    <logger name="org.springframework.security" level="TRACE" additivity="false">
+        <appender-ref ref="SECURITY_FILE"/>
+        <appender-ref ref="LOKI"/>
+    </logger>
+
+    <logger name="org.hibernate" level="TRACE" additivity="false">
+        <appender-ref ref="DB_FILE"/>
+        <appender-ref ref="LOKI"/>
+    </logger>
+
+    <logger name="org.springframework.web" level="TRACE" additivity="false">
+        <appender-ref ref="WEB_FILE"/>
+        <appender-ref ref="LOKI"/>
+    </logger>
+
+    <logger name="com.alex.unijourneybackend.service" level="TRACE" additivity="false">
+        <appender-ref ref="SERVICE_FILE"/>
+        <appender-ref ref="LOKI"/>
+    </logger>
+
+    <logger name="com.alex.unijourneybackend.repository" level="TRACE" additivity="false">
+        <appender-ref ref="REPO_FILE"/>
+        <appender-ref ref="LOKI"/>
+    </logger>
+
+    <!-- =============================== -->
+    <!-- Root logger -->
+    <!-- =============================== -->
+    <root level="TRACE">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROOT_FILE"/>
+        <appender-ref ref="LOKI"/>
+    </root>
+
+</configuration>

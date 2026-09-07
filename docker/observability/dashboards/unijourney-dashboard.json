@@ -1,0 +1,176 @@
+{
+    "title": "UniJourney - Observability",
+    "uid": "unijourney-observability",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "10s",
+    "time": {
+        "from": "now-1h",
+        "to": "now"
+    },
+    "templating": {
+        "list": [
+            {
+                "name": "loki_service",
+                "type": "query",
+                "datasource": { "type": "loki", "uid": "Loki" },
+                "query": "label_values(service)",
+                "refresh": 2,
+                "includeAll": true,
+                "multi": true
+            }
+        ]
+    },
+    "panels": [
+        {
+            "id": 1,
+            "title": "Log rate per servizio",
+            "type": "timeseries",
+            "datasource": { "type": "loki", "uid": "Loki" },
+            "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+            "targets": [
+                {
+                    "expr": "sum by (service) (count_over_time({service=~\"$loki_service\"}[1m]))",
+                    "legendFormat": "{{service}}",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "short",
+                    "custom": { "drawStyle": "line", "fillOpacity": 15 }
+                },
+                "overrides": []
+            }
+        },
+        {
+            "id": 2,
+            "title": "Error rate per servizio",
+            "type": "timeseries",
+            "datasource": { "type": "loki", "uid": "Loki" },
+            "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+            "targets": [
+                {
+                    "expr": "sum by (service) (count_over_time({service=~\"$loki_service\"} |~ \"(?i)error\"[1m]))",
+                    "legendFormat": "{{service}} errors",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "short",
+                    "custom": { "drawStyle": "bars", "fillOpacity": 30 },
+                    "color": { "mode": "fixed", "fixedColor": "red" }
+                },
+                "overrides": []
+            }
+        },
+        {
+            "id": 3,
+            "title": "Ultimi log (tutti i servizi)",
+            "type": "logs",
+            "datasource": { "type": "loki", "uid": "Loki" },
+            "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+            "targets": [
+                {
+                    "expr": "{service=~\"$loki_service\"}",
+                    "refId": "A"
+                }
+            ],
+            "options": {
+                "showTime": true,
+                "wrapLogMessage": true,
+                "sortOrder": "Descending"
+            }
+        },
+        {
+            "id": 4,
+            "title": "CPU usage per container (%)",
+            "type": "timeseries",
+            "datasource": { "type": "prometheus", "uid": "Prometheus" },
+            "gridPos": { "h": 8, "w": 12, "x": 0, "y": 26 },
+            "targets": [
+                {
+                    "expr": "sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"unijourney-.*\"}[1m])) * 100",
+                    "legendFormat": "{{name}}",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percent",
+                    "custom": { "drawStyle": "line", "fillOpacity": 10 }
+                },
+                "overrides": []
+            }
+        },
+        {
+            "id": 5,
+            "title": "Memory usage per container",
+            "type": "timeseries",
+            "datasource": { "type": "prometheus", "uid": "Prometheus" },
+            "gridPos": { "h": 8, "w": 12, "x": 12, "y": 26 },
+            "targets": [
+                {
+                    "expr": "container_memory_usage_bytes{name=~\"unijourney-.*\"}",
+                    "legendFormat": "{{name}}",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "bytes",
+                    "custom": { "drawStyle": "line", "fillOpacity": 10 }
+                },
+                "overrides": []
+            }
+        },
+        {
+            "id": 6,
+            "title": "Network I/O per container",
+            "type": "timeseries",
+            "datasource": { "type": "prometheus", "uid": "Prometheus" },
+            "gridPos": { "h": 8, "w": 12, "x": 0, "y": 34 },
+            "targets": [
+                {
+                    "expr": "sum by (name) (rate(container_network_receive_bytes_total{name=~\"unijourney-.*\"}[1m]))",
+                    "legendFormat": "{{name}} rx",
+                    "refId": "A"
+                },
+                {
+                    "expr": "sum by (name) (rate(container_network_transmit_bytes_total{name=~\"unijourney-.*\"}[1m]))",
+                    "legendFormat": "{{name}} tx",
+                    "refId": "B"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "Bps",
+                    "custom": { "drawStyle": "line", "fillOpacity": 10 }
+                },
+                "overrides": []
+            }
+        },
+        {
+            "id": 7,
+            "title": "Backend JVM heap usage",
+            "type": "timeseries",
+            "datasource": { "type": "prometheus", "uid": "Prometheus" },
+            "gridPos": { "h": 8, "w": 12, "x": 12, "y": 34 },
+            "targets": [
+                {
+                    "expr": "jvm_memory_used_bytes{area=\"heap\", job=\"spring-boot-actuator\"}",
+                    "legendFormat": "{{id}}",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "bytes",
+                    "custom": { "drawStyle": "line", "fillOpacity": 10 }
+                },
+                "overrides": []
+            }
+        }
+    ]
+}

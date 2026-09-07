@@ -1,0 +1,8 @@
+# observability/grafana-dashboards-provider.yml
+apiVersion: 1
+providers:
+- name: unijourney
+  folder: UniJourney
+  type: file
+  options:
+    path: /var/lib/grafana/dashboards

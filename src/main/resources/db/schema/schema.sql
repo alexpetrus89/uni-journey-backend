@@ -1,0 +1,10 @@
+SELECT current_database(), current_user, current_schema();
+
+
+CREATE SCHEMA IF NOT EXISTS academic;
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS people;
+CREATE SCHEMA IF NOT EXISTS registry;
+CREATE SCHEMA IF NOT EXISTS study;
+CREATE SCHEMA IF NOT EXISTS communication;
+
