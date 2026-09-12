@@ -63,6 +63,13 @@ public interface ExaminationOutcomeRepository
      */
     boolean existsByAppealIdAndRegister(Long appealId, String register);
 
+    /**
+     * Delete all examination outcomes by student register
+     * @param register
+     * @throws PersistenceException persistence error
+     */
+    void deleteByRegister(String register);
+
 
 }
 
